@@ -13,17 +13,24 @@ namespace Speech
             List<SpeechEngineInfo> info = new List<SpeechEngineInfo>();
 
             // VOICEROID+ を列挙
-            var voiceroidPlus = new VoiceroidPlusEnumerator();
-            if(voiceroidPlus.GetSpeechEngineInfo().Length > 0)
+            var voiceroidPlus = new VoiceroidPlusEnumerator().GetSpeechEngineInfo();
+            if(voiceroidPlus.Length > 0)
             {
-                info.AddRange(voiceroidPlus.GetSpeechEngineInfo());
+                info.AddRange(voiceroidPlus);
             }
 
             // VOICEROID2 を列挙
-            var voiceroid2 = new Voiceroid2Enumerator();
-            if(voiceroid2.GetSpeechEngineInfo().Length > 0)
+            var voiceroid2 = new Voiceroid2Enumerator().GetSpeechEngineInfo();
+            if(voiceroid2.Length > 0)
             {
-                info.AddRange(voiceroid2.GetSpeechEngineInfo());
+                info.AddRange(voiceroid2);
+            }
+
+            //CeVIO を列挙
+            var cevio = new CeVIOEnumerator().GetSpeechEngineInfo();
+            if(cevio.Length > 0)
+            {
+                info.AddRange(cevio);
             }
 
             // SAPI5 を列挙
@@ -54,6 +61,8 @@ namespace Speech
                     return new VoiceroidPlusController(info);
                 case Voiceroid2Enumerator.EngineName:
                     return new Voiceroid2Controller(info);
+                case CeVIOEnumerator.EngineName:
+                    return new CeVIOController(info);
                 case SAPI5Enumerator.EngineName:
                     return new SAPI5Controller(info);
                 default:

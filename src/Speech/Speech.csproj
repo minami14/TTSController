@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -49,6 +49,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CeVIO.Talk.RemoteService, Version=2.1.2.0, Culture=neutral, PublicKeyToken=8c8a62729f45e96f, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\CeVIO.Talk.RemoteService\v4.0_2.1.2.0__8c8a62729f45e96f\CeVIO.Talk.RemoteService.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Codeer.Friendly, Version=2.5.0.0, Culture=neutral, PublicKeyToken=6c44da6fca38aa86, processorArchitecture=MSIL">
       <HintPath>..\packages\Codeer.Friendly.2.5.0\lib\net40\Codeer.Friendly.dll</HintPath>
       <Private>True</Private>
@@ -95,6 +100,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CeVIOController.cs" />
+    <Compile Include="CeVIOEnumerator.cs" />
     <Compile Include="ISpeechEnumerator.cs" />
     <Compile Include="ISpeechEngine.cs" />
     <Compile Include="Recorder.cs" />
