@@ -10,7 +10,8 @@
 
 - [x] VOICEROID+ EX
 - [x] VOICEROID2
-- [ ] CeVIO
+- [ ] 音街ウナTalk Ex
+- [x] CeVIO
 - [x] SAPI5 (おまけ程度)
 
 ### 制御機能
