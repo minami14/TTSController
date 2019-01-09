@@ -37,7 +37,17 @@ namespace Speech
 
         public void Activate()
         {
-            ServiceControl.StartHost(false);
+            switch (ServiceControl.StartHost(false))
+            {
+                case HostStartResult.NotRegistered:
+                    throw new Exception("インストール状態が不明です");
+                case HostStartResult.FileNotFound:
+                    throw new Exception("実行ファイルが見つかりません");
+                case HostStartResult.BootingFailed:
+                    throw new Exception("プロセスの起動に失敗しました");
+                case HostStartResult.HostError:
+                    throw new Exception("アプリケーション起動後、エラーにより終了しました");
+            }
             _talker = new Talker();
             _talker.Cast = _libraryName;
             _isActive = true;
