@@ -29,7 +29,11 @@ namespace Speech
             List<SpeechEngineInfo> info = new List<SpeechEngineInfo>();
             foreach (var v in _info)
             {
-                info.Add(new SpeechEngineInfo { EngineName = EngineName, EnginePath = v.Path, LibraryName = v.Name });
+                //インストールフォルダに実行ファイルが存在するか確認
+                if (File.Exists(v.Path))
+                {
+                    info.Add(new SpeechEngineInfo { EngineName = EngineName, EnginePath = v.Path, LibraryName = v.Name });
+                }
             }
             return info.ToArray();
         }

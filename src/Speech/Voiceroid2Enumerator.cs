@@ -23,6 +23,12 @@ namespace Speech
         {
             List<SpeechEngineInfo> info = new List<SpeechEngineInfo>();
             string path = GetInstalledPath();
+            //インストールフォルダに実行ファイルが存在するか確認
+            if (!File.Exists(path))
+            {
+                return info.ToArray();
+            }
+
             foreach (var v in _name)
             {
                 info.Add(new SpeechEngineInfo { EngineName = EngineName, EnginePath = path, LibraryName = v });
