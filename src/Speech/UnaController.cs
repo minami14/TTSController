@@ -10,34 +10,27 @@ using System.Windows.Forms;
 
 namespace Speech
 {
-    /// <summary>
-    /// VOICEROID+ 操作クラス
-    /// </summary>
-    public class VoiceroidPlusController : IDisposable, ISpeechEngine
+    public class UnaController : IDisposable, ISpeechEngine
     {
-        WindowsAppFriend _app;
-        Process _process;
-        WindowControl _root;
-        System.Timers.Timer _timer; // 状態監視のためのタイマー
-        bool _playStarting = false;
+        private WindowsAppFriend _app;
+        private Process _process;
+        private WindowControl _root;
+        private System.Timers.Timer _timer; // 状態監視のためのタイマー
+        private bool _playStarting = false;
 
         [DllImport("User32.dll")]
         static extern int SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-
-        /// <summary>
-        /// Voiceroid のフルパス
-        /// </summary>
-        public string VoiceroidPath { get; private set; }
+        public string EnginePath { get; private set; }
 
         public SpeechEngineInfo Info { get; private set; }
 
-        public VoiceroidPlusController(SpeechEngineInfo info)
+        public UnaController(SpeechEngineInfo info)
         {
             Info = info;
-            VoiceroidPath = info.EnginePath;
+            EnginePath = info.EnginePath;
             _timer = new System.Timers.Timer(100);
             _timer.Elapsed += timer_Elapsed;
         }
@@ -66,16 +59,16 @@ namespace Speech
         }
 
         /// <summary>
-        /// Voiceroid が起動中かどうかを確認
+        /// 音街ウナTalk Ex が起動中かどうかを確認
         /// </summary>
         /// <returns>起動中であれば true</returns>
         public bool IsActive()
         {
-            string name = Path.GetFileNameWithoutExtension(VoiceroidPath);
+            string name = Path.GetFileNameWithoutExtension(EnginePath);
             Process[] localByName = Process.GetProcessesByName(name);
-            foreach(var p in localByName)
+            foreach (var p in localByName)
             {
-                if(p.MainModule.FileName == VoiceroidPath)
+                if (p.MainModule.FileName == EnginePath)
                 {
                     _process = p;
                     return true;
@@ -85,18 +78,18 @@ namespace Speech
         }
 
         /// <summary>
-        /// Voiceroidを起動する。すでに起動している場合には起動しているものを操作対象とする。
+        /// 音街ウナTalk Exを起動する。すでに起動している場合には起動しているものを操作対象とする。
         /// </summary>
         public void Activate()
         {
             if (!IsActive())
             {
-                _app = new WindowsAppFriend(Process.Start(this.VoiceroidPath));
-                while (_root == null || (_root != null && _root.TypeFullName != "AITalkEditor.MainView"))
+                _app = new WindowsAppFriend(Process.Start(Info.EnginePath));
+                while (_root == null || (_root != null && _root.TypeFullName != "t"))
                 {
                     _process = Process.GetProcessById(_app.ProcessId);
                     _root = WindowControl.GetTopLevelWindows(_app)[0];
-                    Thread.Sleep(100);
+                    Thread.Sleep(2000);
                 }
             }
             else
@@ -119,14 +112,14 @@ namespace Speech
             Play();
         }
         /// <summary>
-        /// VOICEROID+ に入力された文字列を再生します
+        /// 音街ウナTalk Ex に入力された文字列を再生します
         /// </summary>
         public void Play()
         {
             WindowControl playButton = _root.IdentifyFromZIndex(2, 0, 0, 1, 0, 1, 0, 3);
             AppVar button = playButton.AppVar;
             string text = (string)button["Text"]().Core;
-            if(text.Trim() == "再生")
+            if (text.Trim() == "再生")
             {
                 button["PerformClick"]();
                 _playStarting = true;
@@ -139,7 +132,7 @@ namespace Speech
             }
         }
         /// <summary>
-        /// VOICEROID+ の再生を停止します（停止ボタンを押す）
+        /// 音街ウナTalk Ex の再生を停止します（停止ボタンを押す）
         /// </summary>
         public void Stop()
         {
@@ -148,14 +141,14 @@ namespace Speech
             button["PerformClick"]();
         }
 
-        enum EffectType { Volume = 8, Speed = 9, Pitch = 10, PitchRange = 11}
+        enum EffectType { Volume = 8, Speed = 9, Pitch = 10, PitchRange = 11 }
         /// <summary>
         /// 音量を設定します
         /// </summary>
         /// <param name="value">0.0～2.0</param>
         public void SetVolume(float value)
         {
-            SetEffect(EffectType.Volume, value); 
+            SetEffect(EffectType.Volume, value);
         }
         /// <summary>
         /// 音量を取得します
@@ -171,7 +164,7 @@ namespace Speech
         /// <param name="value">0.5～4.0</param>
         public void SetSpeed(float value)
         {
-            SetEffect(EffectType.Speed,value);
+            SetEffect(EffectType.Speed, value);
         }
         /// <summary>
         /// 話速を取得します
@@ -215,7 +208,7 @@ namespace Speech
         {
             return GetEffect(EffectType.PitchRange);
         }
-        
+
         private void SetEffect(EffectType t, float value)
         {
             ChangeToVoiceEffect();
@@ -224,9 +217,7 @@ namespace Speech
             AppVar v = control.AppVar;
             v["Focus"]();
             v["Text"](string.Format("{0:0.00}", value));
-
-            // TODO: VOICEROID+では数値を変更するだけでは変更が行われないため何らかの方法が必要
-
+            // TODO: 音街ウナTalk Exでは数値を変更するだけでは変更が行われないため何らかの方法が必要
         }
         private float GetEffect(EffectType t)
         {
@@ -269,7 +260,7 @@ namespace Speech
             {
                 if (disposing)
                 {
-                    if(_app != null)
+                    if (_app != null)
                     {
                         _app.Dispose();
                     }

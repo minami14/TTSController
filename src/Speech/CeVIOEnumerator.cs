@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Speech
 {
-    class CeVIOEnumerator : ISpeechEnumerator
+    public class CeVIOEnumerator : ISpeechEnumerator
     {
         public const string EngineName = "CeVIO";
 

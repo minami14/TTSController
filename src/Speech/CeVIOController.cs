@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Speech
 {
-    class CeVIOController : IDisposable, ISpeechEngine
+    public class CeVIOController : IDisposable, ISpeechEngine
     {
         private string _libraryName;
         private bool _isActive = false;

@@ -26,6 +26,12 @@ namespace Speech
                 info.AddRange(voiceroid2);
             }
 
+            var una = new UnaEnumerator().GetSpeechEngineInfo();
+            if(una.Length > 0)
+            {
+                info.AddRange(una);
+            }
+
             //CeVIO を列挙
             var cevio = new CeVIOEnumerator().GetSpeechEngineInfo();
             if(cevio.Length > 0)
@@ -61,6 +67,8 @@ namespace Speech
                     return new VoiceroidPlusController(info);
                 case Voiceroid2Enumerator.EngineName:
                     return new Voiceroid2Controller(info);
+                case UnaEnumerator.EngineName:
+                    return new UnaController(info);
                 case CeVIOEnumerator.EngineName:
                     return new CeVIOController(info);
                 case SAPI5Enumerator.EngineName:
