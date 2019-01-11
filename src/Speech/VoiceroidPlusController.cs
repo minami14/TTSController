@@ -2,16 +2,11 @@
 using Codeer.Friendly.Windows;
 using Codeer.Friendly.Windows.Grasp;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace Speech
 {
@@ -94,16 +89,22 @@ namespace Speech
         /// </summary>
         public void Activate()
         {
-            if (IsActive())
+            if (!IsActive())
             {
-                _app = new WindowsAppFriend(_process);
+                _app = new WindowsAppFriend(Process.Start(this.VoiceroidPath));
+                while (_root == null || (_root != null && _root.TypeFullName != "AITalkEditor.MainView"))
+                {
+                    _process = Process.GetProcessById(_app.ProcessId);
+                    _root = WindowControl.GetTopLevelWindows(_app)[0];
+                    Thread.Sleep(100);
+                }
             }
             else
             {
-                _process = Process.Start(VoiceroidPath);
                 _app = new WindowsAppFriend(_process);
+                _process = Process.GetProcessById(_app.ProcessId);
+                _root = WindowControl.GetTopLevelWindows(_app)[0];
             }
-            _root = WindowControl.GetTopLevelWindows(_app)[0];
         }
 
         /// <summary>
@@ -129,6 +130,11 @@ namespace Speech
             {
                 button["PerformClick"]();
                 _playStarting = true;
+                while (text.Trim() == "再生")
+                {
+                    Thread.Sleep(100);
+                    text = (string)button["Text"]().Core;
+                }
                 _timer.Start();
             }
         }
