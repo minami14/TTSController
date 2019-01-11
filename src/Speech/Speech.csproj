@@ -110,6 +110,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SAPI5Controller.cs" />
     <Compile Include="SpeechController.cs" />
+    <Compile Include="UnaController.cs" />
+    <Compile Include="UnaEnumerator.cs" />
     <Compile Include="Voiceroid2Controller.cs" />
     <Compile Include="Voiceroid2Enumerator.cs" />
     <Compile Include="VoiceroidPlusController.cs" />
